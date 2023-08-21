@@ -32,8 +32,8 @@ def create_app(test_config=None):
     def hello():
         return 'Hello, World!'
     
-    from . import symptom
-    app.register_blueprint(symptom.bp)
+    # from . import symptom
+    # app.register_blueprint(symptom.bp)
     
     from . import risk
     app.register_blueprint(risk.bp)
