@@ -4,7 +4,6 @@ from dotenv import load_dotenv
 import requests
 import datetime
 
-
 ### Create CanRisk pedigree file from data passed in
 
 def pedigree_file(data: dict) -> str:
@@ -98,42 +97,6 @@ def pedigree_file(data: dict) -> str:
     
     return file
 
-
-# def create_pedigree_file(target_risk_factors: dict[str, str], pedigree_data: list[dict[str, str]]) -> str:
-    
-#     file = "##CanRisk 2.0\n"
-    
-#     for key, value in headers.items():
-#         file += value + target_risk_factors[key] + '\n'
-
-#     file += "##FamID Name Target IndivID FathID MothID Sex MZtwin Dead Age Yob BC1 BC2 OC PRO PAN Ashkn BRCA1 BRCA2 PALB2 ATM CHEK2 BARD1 RAD51D RAD51C BRIP1 ER:PR:HER2:CK14:CK56\n"
-    
-#     for ped in pedigree_data:
-        
-#         role = ped["role"]
-        
-#         file += "0001\t" + role + '\t'
-        
-#         if role == "target":
-#             file = file + "1\tT\tF\tM\tF\t0\t"
-#         elif role == "mother":
-#             file = file + "0\tM\t0\t0\tF\t0\t"
-#         elif role == "father":
-#             file = file + "0\tF\t0\t0\tM\t0\t"
-            
-#         file += ped["dead"] + '\t' + ped["age"] + '\t'
-        
-#         try:
-#             file += ped["yob"] + '\t'
-#         except:
-#             file += str(datetime.date.today().year - int(ped["age"])) + '\t'
-            
-#         file += ped["bc1"] + '\t' + ped["bc2"] + '\t' + ped["oc"] + '\t' + ped["pro"] + '\t' + ped["pan"] + '\t' + ped["ashkn"] + '\t'
-        
-#         file += "0:0\t" * 9 + "0:0:0:0:0\n" 
-    
-#     return file
-
 def auth_token() -> str:
     
     dotenv_path = join(dirname(__file__), '.env')
@@ -174,9 +137,43 @@ def breast_cancer_baseline(data: dict):
         json=payload 
     )
     
-    print(r.json())
         
     return (r.json()["pedigree_result"][0]["cancer_risks"][4]["breast cancer risk"]["percent"])
+
+# def create_pedigree_file(target_risk_factors: dict[str, str], pedigree_data: list[dict[str, str]]) -> str:
+    
+#     file = "##CanRisk 2.0\n"
+    
+#     for key, value in headers.items():
+#         file += value + target_risk_factors[key] + '\n'
+
+#     file += "##FamID Name Target IndivID FathID MothID Sex MZtwin Dead Age Yob BC1 BC2 OC PRO PAN Ashkn BRCA1 BRCA2 PALB2 ATM CHEK2 BARD1 RAD51D RAD51C BRIP1 ER:PR:HER2:CK14:CK56\n"
+    
+#     for ped in pedigree_data:
+        
+#         role = ped["role"]
+        
+#         file += "0001\t" + role + '\t'
+        
+#         if role == "target":
+#             file = file + "1\tT\tF\tM\tF\t0\t"
+#         elif role == "mother":
+#             file = file + "0\tM\t0\t0\tF\t0\t"
+#         elif role == "father":
+#             file = file + "0\tF\t0\t0\tM\t0\t"
+            
+#         file += ped["dead"] + '\t' + ped["age"] + '\t'
+        
+#         try:
+#             file += ped["yob"] + '\t'
+#         except:
+#             file += str(datetime.date.today().year - int(ped["age"])) + '\t'
+            
+#         file += ped["bc1"] + '\t' + ped["bc2"] + '\t' + ped["oc"] + '\t' + ped["pro"] + '\t' + ped["pan"] + '\t' + ped["ashkn"] + '\t'
+        
+#         file += "0:0\t" * 9 + "0:0:0:0:0\n" 
+    
+#     return file
 
 # def target_dict(data):
     
