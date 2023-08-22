@@ -16,7 +16,7 @@ def risk():
         return "Please use a POST method."
     
     data = request.get_json()
-    
+        
     res = get_all_risks(data)
     
     return res
@@ -26,10 +26,7 @@ import api.baseline_risk.hrtrisk as hrt
 import api.baseline_risk.clinrisk as clin
 def get_all_risks(data):
     
-    if data["menopause"]:
-        menopause_age = int(data["menopause_age"])
-    else:
-        menopause_age = -1
+    menopause_age = int(data.get("menopause_age", "-1"))
     
     hazard = hrt.hrt_hazards(
         int(data["age"]),
