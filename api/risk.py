@@ -22,9 +22,11 @@ def risk():
     return res
 
 import api.baseline_risk.canrisk as cr
-import api.baseline_risk.hrtrisk as hrt
+import api.hrtrisk as hrt
 import api.baseline_risk.clinrisk as clin
 def get_all_risks(data):
+    
+    canrisk = cr.CanRisk(data)
     
     menopause_age = int(data.get("menopause_age", "-1"))
     
@@ -39,7 +41,7 @@ def get_all_risks(data):
     dict = {
         "breast cancer": 
             {
-                "baseline": cr.breast_cancer_baseline(data),
+                "baseline": canrisk.predict(),
                 "hazard": hazard["cancer"]
             },
         "chd": 

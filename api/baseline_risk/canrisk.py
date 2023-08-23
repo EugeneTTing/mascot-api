@@ -2,143 +2,114 @@ import os
 from os.path import join, dirname
 from dotenv import load_dotenv
 import requests
-import datetime
+from api.baseline_risk.riskmodel import RiskModel
+from api.baseline_risk.pedigree import Pedigree
 
-### Create CanRisk pedigree file from data passed in
 
-def pedigree_file(data: dict) -> str:
+class CanRisk(RiskModel):
     
-    file = "##CanRisk 2.0\n"
-    
-    # Optional target headers
-    headers = {
-        "menarche": "##Menarhche=",
-        "num_children": "##Parity=",
-        "age_at_first_child": "##First_live_birth=",
-        "menopause_age": "##Menopause=",
-        "height": "##Height=",
-    }
-    for key, value in headers.items():
-        file += value + data.get(key, "NA") + '\n'
+    @staticmethod
+    def pedigree_file(data: dict) -> str:
         
-    oc_use = data["oral_c"]
-    if oc_use != "never":
-        file += "##OC_use="
-        if oc_use == "former":
-            file += "F:"
-        else:
-            file += "C:"
-        file += data["oral_c_years"] + '\n'
+        file = "##CanRisk 2.0\n"
         
-    height = float(data["height"])/100.0
-    weight = int(data["weight"])
-    file += "##BMI=" + str(weight / (height * height)) + '\n'
-    
-    alcohol = [
-        0,
-        0.5,
-        1.5,
-        4.5,
-        8,
-        12
-    ] # mean units of range from form
-    file += "##Alcohol=" + str(alcohol[int(data["alcohol"])] * 8) + '\n'
-    
-    file += "##FamID Name Target IndivID FathID MothID Sex MZtwin Dead Age Yob BC1 BC2 OC PRO PAN Ashkn BRCA1 BRCA2 PALB2 ATM CHEK2 BARD1 RAD51D RAD51C BRIP1 ER:PR:HER2:CK14:CK56\n"
-
-    # Target pedigree data
-    file += "01\ttarget\t1\tta\tfa\tmo\tF\t0\t0\t"
-    file += data["age"] + '\t'
-    file += str(datetime.date.today().year - int(data["age"])) + '\t'
-    file += "0\t0\t0\t0\t0\t"
-    if data["ash"]:
-        file += "1\t"
-    else:
-        file += "0\t"
-    file += "0:0\t" * 9 + "0:0:0:0:0\n"
-    
-    # Mother pedigree data
-    file += "01\tmother\t0\tmo\t0\t0\tF\t0\t"
-    if data["m_dead"]:
-        file += "1\t"
-    else:
-        file += "0\t"
-    file += data["m_age"] + '\t'
-    file += data["m_yob"] + '\t'
-    file += data.get("m_br_cancer_age", "0") + '\t'
-    file += data.get("m_br_cancer_2_age", "0") + '\t'
-    file += data.get("m_ov_cancer_age", "0") + '\t'
-    file += "0\t"
-    file += data.get("m_pa_cancer_age", "0") + '\t'
-    if data["ash"]:
-        file += "1\t"
-    else:
-        file += "0\t"
-    file += "0:0\t" * 9 + "0:0:0:0:0\n"
-    
-    # Father pedigree data
-    file += "01\tfather\t0\tfa\t0\t0\tM\t0\t"
-    if data["f_dead"]:
-        file += "1\t"
-    else:
-        file += "0\t"
-    file += data["f_age"] + '\t'
-    file += data["f_yob"] + '\t'
-    file += "0\t0\t0\t"
-    file += data.get("f_pr_cancer_age", "0") + '\t'
-    file += data.get("f_pa_cancer_age", "0") + '\t'
-    if data["ash"]:
-        file += "1\t"
-    else:
-        file += "0\t"
-    file += "0:0\t" * 9 + "0:0:0:0:0\n"
-    
-    # print(file)
-    
-    return file
-
-def auth_token() -> str:
-    
-    dotenv_path = join(dirname(__file__), '.env')
-    load_dotenv(dotenv_path)
-
-    url = os.environ.get("CANRISK_URL")
-    uname = os.environ.get("CANRISK_USERNAME")
-    pword = os.environ.get("CANRISK_PASSWORD")
-    
-    payload = {
-        "username": uname,
-        "password": pword
-    }
-    
-    r = requests.post(f"{url}/auth-token/", json=payload)
-    return r.json()["token"]
-
-def breast_cancer_baseline(data: dict):
-
-    ped = pedigree_file(data)
-
-    dotenv_path = join(dirname(__file__), '.env')
-    load_dotenv(dotenv_path)
-
-    url = os.environ.get("CANRISK_URL")
-    token = auth_token()
-    
-    payload = {
-        "pedigree_data": ped,
-        "user_id": "mascot",
-        "cancer_rates": "UK",
-        "mut_freq": "UK",
-    }
-    
-    r = requests.post(
-        f"{url}/boadicea/",
-        headers= {"Authorization": f"Token {token}"},
-        json=payload 
-    )
-    
+        # optional target headers
+        headers = {
+            "menarche": "##Menarhche=",
+            "num_children": "##Parity=",
+            "age_at_first_child": "##First_live_birth=",
+            "menopause_age": "##Menopause=",
+            "height": "##Height=",
+        }
+        for key, value in headers.items():
+            file += value + data.get(key, "NA") + '\n'
+            
+        oc_use = data["oral_c"]
+        if oc_use != "never":
+            file += "##OC_use="
+            if oc_use == "former":
+                file += "F:"
+            else:
+                file += "C:"
+            file += data["oral_c_years"] + '\n'
+            
+        height = float(data["height"])/100.0
+        weight = int(data["weight"])
+        file += "##BMI=" + str(weight / (height * height)) + '\n'
         
-    return (r.json()["pedigree_result"][0]["cancer_risks"][4]["breast cancer risk"]["percent"])
+        alcohol = [
+            0,
+            0.5,
+            1.5,
+            4.5,
+            8,
+            12
+        ] # mean units of range from form
+        file += "##Alcohol=" + str(alcohol[int(data["alcohol"])] * 8) + '\n'
+        
+        # family pedigree data
+        file += "##FamID Name Target IndivID FathID MothID Sex MZtwin Dead Age Yob BC1 BC2 OC PRO PAN Ashkn BRCA1 BRCA2 PALB2 ATM CHEK2 BARD1 RAD51D RAD51C BRIP1 ER:PR:HER2:CK14:CK56\n"
+
+        prefixArr = ["t_", "f_", "m_"]
+        
+        for prefix in prefixArr:
+            ped = Pedigree(prefix, data)
+            file += ped.createPedigree() + '\n'
+        
+        return file
+    
+    @staticmethod
+    def auth_token() -> str:
+        
+        dotenv_path = join(dirname(__file__), '.env')
+        load_dotenv(dotenv_path)
+
+        url = os.environ.get("CANRISK_URL")
+        uname = os.environ.get("CANRISK_USERNAME")
+        pword = os.environ.get("CANRISK_PASSWORD")
+        
+        payload = {
+            "username": uname,
+            "password": pword
+        }
+        
+        r = requests.post(f"{url}/auth-token/", json=payload)
+        return r.json()["token"]
+    
+    def __init__(self, data: dict):
+        self.url = "https://www.canrisk.org"
+        self.pedigree = self.pedigree_file(data)
+        self.auth = self.auth_token()
+
+    def predict(self):
+
+            payload = {
+                "pedigree_data": self.pedigree,
+                "user_id": "mascot",
+                "cancer_rates": "UK",
+                "mut_freq": "UK",
+            }
+            
+            r = requests.post(
+                f"{self.url}/boadicea/",
+                headers= {"Authorization": f"Token {self.auth}"},
+                json=payload 
+            )
+            
+            # print(r.json())
+            return (r.json()["pedigree_result"][0]["cancer_risks"][4]["breast cancer risk"]["percent"])
+
+
+
+
+
+
+
+
+
+
+
+
 
 # def create_pedigree_file(target_risk_factors: dict[str, str], pedigree_data: list[dict[str, str]]) -> str:
     
