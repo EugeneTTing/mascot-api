@@ -21,12 +21,18 @@ def risk():
     
     return res
 
-import api.baseline_risk.canrisk as cr
+from api.baseline_risk.qrisk3 import QriskModel
+from api.baseline_risk.qthrombosis import QthrombosisModel
+from api.baseline_risk.qfracture import QfractureModel
+from api.baseline_risk.canrisk import CanRisk
 import api.hrtrisk as hrt
-import api.baseline_risk.clinrisk as clin
 def get_all_risks(data):
     
-    canrisk = cr.CanRisk(data)
+    canrisk = CanRisk(data)
+    qrisk = QriskModel(data)
+    qthrombosis = QthrombosisModel(data)
+    qfracture = QfractureModel(data)
+    cvd_baseline = qrisk.predict()
     
     menopause_age = int(data.get("menopause_age", "-1"))
     
@@ -35,8 +41,6 @@ def get_all_risks(data):
         menopause_age,
         int(data["hysterectomy"])
     )
-    
-    cvd_baseline = clin.cvd_baseline(data)
     
     dict = {
         "breast cancer": 
@@ -56,12 +60,12 @@ def get_all_risks(data):
             },
         "vte":
             {
-                "baseline": clin.vte_baseline(data),
+                "baseline": qthrombosis.predict(),
                 "hazard": hazard["vte"]
             },
         "fracture":
             {
-                "baseline": clin.fracture_baseline(data),
+                "baseline": qfracture.predict(),
                 "hazard": hazard["fracture"]
             }
     }

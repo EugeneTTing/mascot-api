@@ -1,31 +1,6 @@
 from math import log, exp
 
-def cvd_baseline(data):
-    args = (
-        int(data["age"]),
-        int(data["af"]),
-        int(data["antipsy"] == "atyp"),
-        int(data["steroids"]),
-        int(data["migraine"]),
-        int(data["ra"]),
-        int(data["kidney"] != "none"),
-        int(data["semi"]),
-        int(data["sle"]),
-        int(data["hypert_treat"]),
-        int(data["diabetes"] == "1"),
-        int(data["diabetes"] == "2"),
-        float(data["weight"])/((float(data["height"]) / 100) ** 2),
-        int(data["ethnicity"]) + 1,
-        int(data["fh_cvd"]),
-        125,
-        4,
-        0,
-        int(data["smoking"]),
-        0,
-    )
-    return qrisk3(*args)
 
-# Still broken???
 def qrisk3(
     age: int, # age
     b_af: int, # atrial fibrilation
@@ -169,25 +144,8 @@ def qrisk3(
     
     # caluclate and return score
     return 100.0 * (1 - pow(survivor, exp(a)))
-
-def vte_baseline(data):
-    args = (
-        int(data["age"]),
-        int(data["heart_failure"]),
-        int(data["hospital"]),
-        int(data["antipsy"] != "none"),
-        int(data["cancer"]),
-        int(data["oral_c"] == "current"),
-        int(data["copd"]),
-        int(data["malabsorption"]),
-        int(data["kidney"] != "none"),
-        int(data["tamoxifen"]),
-        int(data["varicose_vein"]),
-        float(data["weight"])/((float(data["height"]) / 100) ** 2),
-        int(data["smoking"]),
-        0
-    )
-    return qthrombosis(*args)
+    
+    
     
 def qthrombosis(
     age, # age
@@ -268,33 +226,7 @@ def qthrombosis(
     
     return 100.0 * (1 - pow(survivor, exp(a)))
 
-def fracture_baseline(data):
-    args = (
-        int(data["age"]),
-        int(data["alcohol"]),
-        int(data["antidepressants"]),
-        int(data["cancer"]),
-        int(data["copd"]),
-        int(data["steroids"]),
-        int(data["cvd"]),
-        int(data["dementia"]),
-        int(data["endocrine"]),
-        int(data["anticonvulsants"]),
-        int(data["falls"]),
-        int(data["liver"]),
-        int(data["malabsorption"]),
-        int(data["parkin"]),
-        int(data["ra"] or data["sle"]),
-        int(data["kidney"] == "4"),
-        int(data["diabetes"] == "1"),
-        int(data["diabetes"] == "2"),
-        float(data["weight"])/((float(data["height"]) / 100) ** 2),
-        int(data["ethnicity"]) + 1,
-        int(data["fh_osteo"]),
-        int(data["smoking"])
-    )
-    
-    return qfracture(*args)
+
 
 def qfracture(
     age, # age
