@@ -5,6 +5,17 @@ class QthrombosisModel(RiskModel):
     
     def __init__(self, data: dict):
         self.data = data
+        
+        height = float(data["height"])/100.0
+        weight = int(data["weight"])
+        bmi = weight / (height * height)
+        
+        if bmi > 40:
+            self.bmi = 40.0
+        elif bmi < 20:
+            self.bmi = 20.0
+        else:
+            self.bmi = bmi
     
     def create_args(self):
         
@@ -20,7 +31,7 @@ class QthrombosisModel(RiskModel):
             int(self.data.get("kidney", "none") != "none"),
             int(self.data.get("tamoxifen", False)),
             int(self.data.get("varicose_vein", False)),
-            float(self.data["weight"])/((float(self.data["height"]) / 100) ** 2),
+            self.bmi,
             int(self.data["smoking"]),
             0
         )

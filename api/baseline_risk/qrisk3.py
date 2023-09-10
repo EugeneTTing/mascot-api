@@ -6,6 +6,17 @@ class QriskModel(RiskModel):
     def __init__(self, data: dict):
         self.data = data
         
+        height = float(data["height"])/100.0
+        weight = int(data["weight"])
+        bmi = weight / (height * height)
+        
+        if bmi > 40:
+            self.bmi = 40.0
+        elif bmi < 20:
+            self.bmi = 20.0
+        else:
+            self.bmi = bmi
+        
     def create_args(self):
         args = (
             int(self.data["age"]),
@@ -20,7 +31,7 @@ class QriskModel(RiskModel):
             int(self.data.get("hypert_treat", False)),
             int(self.data.get("diabetes", "none") == "1"),
             int(self.data.get("diabetes", "none") == "2"),
-            float(self.data["weight"])/((float(self.data["height"]) / 100) ** 2),
+            self.bmi,
             int(self.data["ethnicity"]) + 1,
             int(self.data.get("fh_cvd", False)),
             int(self.data.get("ratio", 4)),
