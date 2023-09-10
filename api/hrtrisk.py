@@ -1,8 +1,10 @@
 vte_arr = [1.73, 1.4]
 
-cancer_arr =[[1.08, 1.42], [1.12, 1.34], [1.13, 1.49], [1.26, 1.62]]
+cancer_arr =[[1.42, 1.08], [1.34, 1.12], [1.49, 1.13], [1.62, 1.26]]
 
 cvd_arr = [(0.52, 1.37), (1.07, 1.21)]
+
+fracture_arr = [0.55, 0.77]
 
 def hrt_vte(hysterectomy: int) -> float:
     return vte_arr[hysterectomy]
@@ -24,6 +26,11 @@ def hrt_cvd(age: int, age_at_menopause: int) -> tuple[float, float]:
         return cvd_arr[0]
     return cvd_arr[1]
 
+def hrt_fracture(age: int) -> float:
+    if age < 60:
+        return fracture_arr[0]
+    return fracture_arr[1]
+
 def hrt_hazards(age: int, age_at_menopause: int, hysterectomy: int) -> dict[str, float]:
     dict = {}
     dict["cancer"] = hrt_cancer(age, hysterectomy)
@@ -31,5 +38,5 @@ def hrt_hazards(age: int, age_at_menopause: int, hysterectomy: int) -> dict[str,
     cvd = hrt_cvd(age, age_at_menopause)
     dict["chd"] = cvd[0]
     dict["stroke"] = cvd[1]
-    dict["fracture"] = 0.74
+    dict["fracture"] = hrt_fracture(age)
     return dict

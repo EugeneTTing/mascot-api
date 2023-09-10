@@ -34,12 +34,11 @@ def get_all_risks(data):
     qfracture = QfractureModel(data)
     cvd_baseline = qrisk.predict()
     
-    menopause_age = int(data.get("menopause_age", "-1"))
     
     hazard = hrt.hrt_hazards(
         int(data["age"]),
-        menopause_age,
-        int(data["hysterectomy"])
+        int(data.get("menopause_age", "-1")),
+        int(data.get("hysterectomy", False))
     )
     
     dict = {

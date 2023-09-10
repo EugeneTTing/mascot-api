@@ -341,32 +341,26 @@ def qfracture(
     
     return 100.0 * (1 - pow(survivor, exp(a)))
 
-# qrisk test
-# Baseline test: 55 yo, all ethnicities, mean UK Townsend score -0.35
-# https://s3-eu-west-1.amazonaws.com/statistics.digitalresources.jisc.ac.uk/dkan/files/Townsend_Deprivation_Scores/UK%20Townsend%20Deprivation%20Scores%20from%202011%20census%20data.pdf
-# print(qrisk3(55, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 25, 1, 0, 4, 125, 0, 0, 0))
-# print(qrisk3(55, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 25, 2, 0, 4, 125, 0, 0, -0.35))
-# print(qrisk3(55, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 25, 3, 0, 4, 125, 0, 0, -0.35))
-# print(qrisk3(55, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 25, 4, 0, 4, 125, 0, 0, -0.35))
-# print(qrisk3(55, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 25, 5, 0, 4, 125, 0, 0, -0.35))
-# print(qrisk3(55, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 25, 6, 0, 4, 125, 0, 0, -0.35))
-# print(qrisk3(55, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 25, 7, 0, 4, 125, 0, 0, -0.35))
-# print(qrisk3(55, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 25, 8, 0, 4, 125, 0, 0, -0.35))
-# print(qrisk3(55, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 25, 9, 0, 4, 125, 0, 0, -0.35))
 
-# qthrombosis test
-# print(qthrombosis(60, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 25.39, 0, 0)) # 0.7
-# print(qthrombosis(65, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 31.11, 4, 0)) # 1.9
-# print(qthrombosis(40, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 20.81, 2, 0)) # 0.9
-# print(qthrombosis(50, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1, 21.6, 1, 0)) # 3.7
-# print(qthrombosis(55, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0, 20.76, 0, 0)) # 2
+# QRisk3 validation tests
+# print(qrisk3(45, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 20, 1, 0, 3.5, 110, 0, 0, 0))
+# print(qrisk3(52, 1, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 26.67, 7, 0, 4, 125, 0, 3, 0))
+# print(qrisk3(58, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 21.6, 8, 1, 4, 125, 0, 1, 0))
+# print(qrisk3(65, 0, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 27.55, 2, 0, 5, 135, 0, 2, 0))
+# print(qrisk3(48, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 24.69, 1, 1, 4, 125, 0, 0, 0))
 
-# qfracture tests
-# for i in range(1, 10):
-#     print(i)
-#     print(qfracture(55, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 25.39, i, 0, 0))
 
-# print(qfracture(65, 2, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 25.39, 1, 0, 2)) # 9.5
-# print(qfracture(70, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 38.05, 6, 1, 3)) # 3.7
-# print(qfracture(50, 0, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 26.16, 8, 0, 0)) # 4.8
-# print(qfracture(80, 3, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 18.52, 4, 0, 4)) # 10.4
+# QThrombosis validation tests
+# print(qthrombosis(60, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 26.67, 1, 0))
+# print(qthrombosis(65, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 22.96, 2, 0))
+# print(qthrombosis(45, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 25.51, 0, 0))
+# print(qthrombosis(52, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 37.78, 4, 0))
+# print(qthrombosis(72, 0, 1, 0, 1, 0, 0, 1, 1, 0, 1, 20, 0, 0))
+
+
+# QFracture validation tests
+# print(qfracture(65, 2, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 27.55, 1, 1, 0))
+# print(qfracture(62, 4, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 0, 1, 26.67, 3, 0, 3))
+# print(qfracture(70, 0, 0, 1, 0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 37.78, 6, 0, 1))
+# print(qfracture(55, 5, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 20, 1, 1, 4))
+# print(qfracture(78, 0, 0, 1, 0, 0, 1, 1, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 27.06, 9, 0, 1))
